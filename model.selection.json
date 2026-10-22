@@ -1,0 +1,15 @@
+{
+  "route": "account-chipforge-deepseek-flash",
+  "model": "deepseek-flash",
+  "profile": "local-dev",
+  "accountId": "chipforge-deepseek-flash",
+  "slots": [
+    "primary",
+    "escalation",
+    "fast",
+    "compaction",
+    "verifier"
+  ],
+  "configurationRevision": 1,
+  "scope": "text-only ChipForge; image/video not used"
+}

@@ -1,0 +1,16 @@
+{
+  "specs/image_multi.json": "615c4e773d45bb23561cf4b2a3622c8d823aae8c445cda01163742881a6a74be",
+  "specs/sobel_compact.json": "77ff05e7f5beb2a110696502d18049e1fdc5e2fe480d0f56f79161c72c9e4661",
+  "specs/sobel_fast.json": "d5c753ac40c91409372d84a747e997b1a292c1521230b73250e538b9edc0e020",
+  "verification/__init__.py": "9b5a6f75d715d7953331347e30c5be4fb02dcfa128855d1f81b9059af3c7e5ee",
+  "verification/oracle.py": "f61220daa2ccf3a0afc34c912e402e4ff6e46c6f690bd99c13db2df588f21eaf",
+  "verification/run_sim.py": "07eb196e7954ee036fbc1cbc53407c5a8c3a05357a4f3847454d60b0d1069c79",
+  "verification/test_chip.py": "bf6c9f9c9edb62875ad854c3d909d9472daf012a58b2deae791179f90ac2c556",
+  "verification/test_controller.py": "3af4d0581a8a1fcbb48d182f054eed1dfeebb54f9a50a6d90debf5c07a331e34",
+  "verification/test_oracle.py": "bbd60deddf7861c1b5a4600228508ad804c2220999fb22ef0ac86d4f78d3bdb0",
+  "assets/input/checker.png": "3cdd5b3486e8d5c930728f08845f396089f8de55c9df9acafb0e4df6823f84ce",
+  "assets/input/gradient.png": "7f8185b74b409ab4104d64371da58fddce1e0f1cb968c1ddb2129e54b92892a5",
+  "assets/input/shapes.png": "02557a40e89e5f62d708c2bff0766537db6fe84f2e6356321a7aa32c9bfb2b68",
+  "docs/IMAGE_CHIP_SPEC.md": "ac77c82bda454d1b18e204bbd38e2ea58cf314dc7f3cc3f916025d5fcdd3bffc",
+  "constraints/image_chip.sdc": "c3b39c910564d9a92bc5ec61f18d3bc071b2d2e468c1cb3a23914d627e218935"
+}

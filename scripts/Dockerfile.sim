@@ -1,0 +1,9 @@
+FROM openroad/ubuntu24.04-dev:latest
+RUN apt-get update && apt-get install -y --no-install-recommends iverilog python3-venv \
+    && rm -rf /var/lib/apt/lists/*
+COPY sim-wheels /tmp/sim-wheels
+RUN python3 -m venv /opt/chipforge-sim \
+    && /opt/chipforge-sim/bin/pip install --no-index --find-links=/tmp/sim-wheels cocotb==2.0.0 pillow==11.3.0 \
+    && rm -rf /tmp/sim-wheels
+ENV PATH="/opt/chipforge-sim/bin:${PATH}"
+WORKDIR /workspace

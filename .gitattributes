@@ -1,0 +1,12 @@
+* text=auto eol=lf
+*.sh text eol=lf
+*.py text eol=lf
+*.mjs text eol=lf
+*.mp4 binary
+*.gif binary
+*.png binary
+*.jpg binary
+*.stl binary
+
+# Preserve the frozen specification's original bytes for hash verification.
+docs/IMAGE_CHIP_SPEC.md -text

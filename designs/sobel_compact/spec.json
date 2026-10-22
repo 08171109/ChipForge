@@ -1,0 +1,60 @@
+{
+  "design_id": "sobel_compact",
+  "top_module": "tt_um_cf_sobel_compact",
+  "protocol_version": "window9_v1",
+  "operations": [
+    "sobel_binary"
+  ],
+  "pixel_bits": 8,
+  "pixel_signed": false,
+  "threshold": 160,
+  "threshold_comparison": "strict_gt",
+  "reserved_mode_behavior": "ignored",
+  "latency_after_last_sample": 21,
+  "minimum_window_initiation_interval": 30,
+  "clock_period_ns": 100,
+  "tiles": "2x2",
+  "image_size": [
+    128,
+    128
+  ],
+  "border": "replicate",
+  "ports": {
+    "ui_in": "pixel",
+    "uio_in[0]": "in_valid",
+    "uio_in[1]": "start_window",
+    "uio_in[3:2]": "mode",
+    "uio_out[4]": "in_ready",
+    "uio_out[5]": "out_valid",
+    "uio_out[6]": "busy",
+    "uo_out": "result",
+    "uio_oe": 240
+  },
+  "protocol": {
+    "reset": "active-low synchronous; ena=0 also aborts",
+    "start": "new start replaces partially collected window",
+    "collection": "nine accepted bytes in row-major 3x3 order; valid gaps allowed",
+    "compute": "no accepted input until result; next cycle may start a new window",
+    "output": "one-cycle pulse; data zero otherwise; no output backpressure",
+    "mode": "ignored",
+    "unused_outputs": "uio_out[7] and [3:0] zero"
+  },
+  "arithmetic": {
+    "sobel_binary": "Gx=(p02-p00)+2*(p12-p10)+(p22-p20); Gy=(p00-p20)+2*(p01-p21)+(p02-p22); out=255 if abs(Gx)+abs(Gy)>160 else 0"
+  },
+  "physical_contract": {
+    "pdk": "sky130A",
+    "standard_cell_library": "sky130_fd_sc_hd",
+    "sdc": "constraints/image_chip.sdc",
+    "input_delay_max_ns": 20,
+    "input_delay_min_ns": 0,
+    "output_delay_max_ns": 20,
+    "output_delay_min_ns": 0,
+    "clock_setup_uncertainty_ns": 0.1,
+    "clock_hold_uncertainty_ns": 0.05,
+    "input_transition_ns": 0.2,
+    "output_load_pf": 0.05,
+    "false_paths": [],
+    "role": "fixed_demo_operating_contract_not_board_signoff"
+  }
+}

@@ -1,0 +1,43 @@
+--- a/packages/core/src/step/inference.ts
++++ b/packages/core/src/step/inference.ts
+@@ -900,7 +900,7 @@
+   }
+   if (s.ac.signal.aborted) onSessionAbort()
+   else s.ac.signal.addEventListener('abort', onSessionAbort, { once: true })
+-  const calls: Array<{ name: string; args: unknown; via: string }> = []
++  const calls: Array<{ name: string; args: unknown; via: string; nativeToolUseId?: string }> = []
+   const deviations: EventInput[] = []
+   let usage: Extract<InferenceEvent, { type: 'usage' }> | undefined
+   let done: Extract<InferenceEvent, { type: 'done' }> | undefined
+@@ -1101,7 +1101,7 @@
+           thinking += ev.delta
+           await emit('thinking', ev.delta)
+         } else if (ev.type === 'toolcall_end') {
+-          calls.push({ name: ev.call.name, args: ev.call.args, via: ev.via })
++          calls.push({ name: ev.call.name, args: ev.call.args, via: ev.via, nativeToolUseId: ev.call.toolUseId })
+           // The deviation names the shape that was parsed, and the sample it was parsed from is the
+           // call itself: a hash of nothing cannot be compared against a later sample.
+           if (ev.via !== 'native')
+@@ -1291,10 +1291,21 @@
+     const refusedCalls: EventInput[] = []
+     // A truncated answer's tool calls are dropped rather than run: the arguments were cut off
+     // mid-serialisation, so what survives is a call the model did not finish asking for.
++    // This gateway binds reasoning replay to original tool-call IDs.
++    const preserveNativeIds = target.route === 'account-chipforge-deepseek-flash' && target.model === 'deepseek-flash'
++    const usedToolIds = new Set<string>()
++    if (preserveNativeIds) {
++      for (const row of await scanAll((q) => s.d.log.scan(q), { type: 'tool/call', lane: s.lane })) {
++        usedToolIds.add(String((row.data as { toolUseId: string }).toolUseId))
++      }
++    }
+     if (!truncated)
+       for (const c of calls) {
+         const ordinal = t.ordinal++
+-        const toolUseId = s.d.ids.toolUseId(ordinal)
++        const nativeId = preserveNativeIds && c.via === 'native' && c.nativeToolUseId &&
++          /^[a-zA-Z0-9_-]{1,64}$/.test(c.nativeToolUseId) && !usedToolIds.has(c.nativeToolUseId) ? c.nativeToolUseId : undefined
++        const toolUseId = nativeId ?? s.d.ids.toolUseId(ordinal)
++        usedToolIds.add(toolUseId)
+         const def = t.snapshot.byName.get(c.name)
+         let refusal:
+           | {

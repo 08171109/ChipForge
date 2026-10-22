@@ -1,0 +1,34 @@
+--- a/packages/ai/src/adapters/pi/index.ts
++++ b/packages/ai/src/adapters/pi/index.ts
+@@ -498,6 +498,31 @@
+           ),
+         )
+         if (this.providerId) requestModel.provider = this.providerId
++        // ChipForge transport compatibility; does not replace route/model identity.
++        const deepseekReplay = this.providerId === 'deepseek' || decl.credentialRef?.startsWith('secret://deepseek/')
++        if (deepseekReplay && decl.api === 'openai-completions') {
++          for (const message of context.messages) {
++            if (message.role !== 'assistant') continue
++            message.provider = requestModel.provider
++            for (const block of message.content) {
++              if (block.type === 'thinking') block.thinkingSignature = 'reasoning_content'
++            }
++          }
++          // Omitted required and [] have identical JSON-Schema meaning. Some gateways
++          // convert omission to null, which upstream validators reject.
++          const explicitRequired = (value: unknown): void => {
++            if (!value || typeof value !== 'object') return
++            if (Array.isArray(value)) { for (const child of value) explicitRequired(child); return }
++            const object = value as Record<string, unknown>
++            if (object.type === 'object' && !Object.hasOwn(object, 'required')) object.required = []
++            for (const child of Object.values(object)) explicitRequired(child)
++          }
++          context.tools = context.tools?.map((tool) => {
++            const parameters = structuredClone(tool.parameters)
++            explicitRequired(parameters)
++            return { ...tool, parameters }
++          })
++        }
+         const it = this.streamImpl(requestModel, context, {
+           ...this.streamOptions(route, req, { ...opts, signal: inner.signal }),
+           // Raw pi streaming does not apply catalog limits; Agnes otherwise defaults to 4096 upstream.

@@ -1,0 +1,9 @@
+{
+  "name": "@chipforge/agh-tools",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "MIT",
+  "exports": "./index.mjs",
+  "agnes": {"plugins": [{"export": "chipforgeTools", "id": "ext:chipforge/tools", "inject": ["extension"]}]}
+}
+
